@@ -1,0 +1,24 @@
+﻿@page "/"
+@inject IJSRuntime JS
+@inject PhaserFunctions Phaser
+
+<div id="canvas"></div>
+
+@*
+I don't think Phaser (or any other context) can be loaded properly until after the window loads.
+The correct way to do this seems to be to run a C# init function through window.onload, which
+initialises everything and starts the game loop. The Blazor lifecycle functions are purely for
+Blazor components.
+ *@
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("after render");
+            await Task.Delay(200); // yuck
+            await Phaser.PhaserInit(JS);
+        }
+    }
+}
